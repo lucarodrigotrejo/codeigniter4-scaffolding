@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+    php-apache:
+        image: lucarodrigotrejo/codeigniter4-php-apache:1.0
+        container_name: 'php-apache'
+        ports:
+          - 80:80
+        volumes:
+          - ./:/var/www/html
+
+    mysql:
+        image: mariadb:10.5.5
+        container_name: 'mysql'
+        ports:
+          - 3307:3307
+        volumes:
+          - ./docker/mysql:/var/lib/mysql
+          - ./docker/logs/mysql:/var/log/mysql
+        environment:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: codeigniter4
+          MYSQL_USER: codeigniter4
+          MYSQL_PASSWORD: codeigniter4
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:5.0.2
+        container_name: 'phpmyadmin'
+        links:
+          - mysql
+        environment:
+          PMA_HOST: mysql
+          PMA_PORT: 3307
+        ports:
+          - 81:80
+        volumes:
+          - ./docker/sessions:/sessions
